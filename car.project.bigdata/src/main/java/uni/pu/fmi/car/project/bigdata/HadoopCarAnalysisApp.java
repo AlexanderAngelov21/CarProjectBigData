@@ -118,46 +118,47 @@ public class HadoopCarAnalysisApp extends JFrame {
 	}
 
 	private void runHadoopJob(String option, String brand, String minHp, String maxHp, String minMpg) {
-	    Configuration conf = new Configuration();
-	    JobConf job = new JobConf(conf, HadoopCarAnalysisApp.class);
-	    job.setJobName("CarAnalysis");
-	    job.set("option", option);
-	    job.set("brand", brand);
-	    job.set("minHp", minHp);
-	    job.set("maxHp", maxHp);
-	    job.set("minMpg", minMpg);
-	  
+		Configuration conf = new Configuration();
+		JobConf job = new JobConf(conf, HadoopCarAnalysisApp.class);
+		job.setJobName("CarAnalysis");
+		job.set("option", option);
+		job.set("brand", brand);
+		job.set("minHp", minHp);
+		job.set("maxHp", maxHp);
+		job.set("minMpg", minMpg);
 
-	    if (option.equals("Average Fuel Economy")) {
-	        job.setMapperClass(CarAverageMapper.class);
-	        job.setReducerClass(CarAverageReducer.class);
-	        job.setOutputKeyClass(Text.class);
-	        job.setOutputValueClass(DoubleWritable.class);
-	    } else {
-	        job.setMapperClass(CarListMapper.class);
-	        job.setReducerClass(CarListReducer.class);
-	        job.setOutputKeyClass(Text.class);
-	        job.setOutputValueClass(Text.class);
-	    }
+		if (option.equals("Average Fuel Economy")) {
+			job.setMapperClass(CarAverageMapper.class);
+			job.setReducerClass(CarAverageReducer.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(DoubleWritable.class);
+		} else {
+			job.setMapperClass(CarListMapper.class);
+			job.setReducerClass(CarListReducer.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(Text.class);
+		}
 
-	    Path input = new Path("hdfs://127.0.0.1:9000/input/cars.csv");
-	    Path output = new Path("hdfs://127.0.0.1:9000/output/car_analysis");
+		Path input = new Path("hdfs://127.0.0.1:9000/input/cars.csv");
+		Path output = new Path("hdfs://127.0.0.1:9000/output/car_analysis");
 
-	    FileInputFormat.setInputPaths(job, input);
-	    FileOutputFormat.setOutputPath(job, output);
+		FileInputFormat.setInputPaths(job, input);
+		FileOutputFormat.setOutputPath(job, output);
 
-	    try {
-	        FileSystem fs = FileSystem.get(URI.create("hdfs://127.0.0.1:9000"), conf);
-	        if (fs.exists(output)) {
-	            fs.delete(output, true);
-	        }
-	        JobClient.runJob(job);
-	        JOptionPane.showMessageDialog(null, "Hadoop job executed successfully.", "Job Status", JOptionPane.INFORMATION_MESSAGE);
-	        System.out.println("Hadoop job executed successfully.");
-	    } catch (IOException ex) {
-	        ex.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Hadoop job execution failed: " + ex.getMessage(), "Job Status", JOptionPane.ERROR_MESSAGE);
-	    }
+		try {
+			FileSystem fs = FileSystem.get(URI.create("hdfs://127.0.0.1:9000"), conf);
+			if (fs.exists(output)) {
+				fs.delete(output, true);
+			}
+			JobClient.runJob(job);
+			JOptionPane.showMessageDialog(null, "Hadoop job executed successfully.", "Job Status",
+					JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("Hadoop job executed successfully.");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Hadoop job execution failed: " + ex.getMessage(), "Job Status",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public static void main(String[] args) {
