@@ -36,15 +36,22 @@ public class CarListMapper extends MapReduceBase implements Mapper<LongWritable,
 			}
 			String resultType = this.configuration.get("option", "Car List");
 			String brandFilter = this.configuration.get("brand", "");
-			double minHorsepower = Double.parseDouble(this.configuration.get("minHp", "0"));
-			double maxHorsepower = Double.parseDouble(this.configuration.get("maxHp", "99999"));
-			double minMpg = Double.parseDouble(this.configuration.get("minMpg", "0"));
+			double minHorsepower = Double.parseDouble(this.configuration.get("minHp", "-1000"));
+			double maxHorsepower = Double.parseDouble(this.configuration.get("maxHp", "999999"));
+			double minMpg = Double.parseDouble(this.configuration.get("minMpg", "-1000"));
 			if (resultType.equals("Car List")) {
 			if ((brandFilter.isEmpty() || make.toLowerCase().contains(brandFilter.toLowerCase()))
 					&& (horsepower >= minHorsepower && horsepower <= maxHorsepower) && (mpg > minMpg)) {
-
+                String printMPG=String.valueOf(mpg);
+                String printHP=String.valueOf(horsepower);
+                if(horsepower<=0) {
+                	printHP="Invalid data - [Value less than or equal to 0]";
+                }
+                if(mpg<=0) {
+                	printMPG="Invalid data - [Value less than or equal to 0]";
+                }
 				Text outputKey = new Text(make);
-				Text outputValue = new Text(horsepower + " " + mpg);
+				Text outputValue = new Text(printHP + " " + printMPG);
 				output.collect(outputKey, outputValue);
 			}
 			}
