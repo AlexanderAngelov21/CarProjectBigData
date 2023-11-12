@@ -10,7 +10,7 @@ import org.apache.hadoop.mapred.Reporter;
 
 public class CarListMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 	private org.apache.hadoop.mapred.JobConf configuration;
-
+	private int lineCounter = 0;
 	@Override
 	public void configure(org.apache.hadoop.mapred.JobConf job) {
 		super.configure(job);
@@ -20,6 +20,10 @@ public class CarListMapper extends MapReduceBase implements Mapper<LongWritable,
 	@Override
 	public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter)
 			throws IOException {
+		lineCounter++;
+        if (lineCounter <= 2) {// da skipne parvite 2 reda - ime i tip na danni
+            return;
+        }
 		String line = value.toString();
 		String[] columns = line.split(";");
 		if (columns.length >= 10) {
