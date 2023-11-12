@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -83,7 +84,7 @@ public class HadoopCarAnalysisApp extends JFrame {
 		searchButton = new JButton("Search");
 		searchButton.setBounds(120, 140, 100, 30);
 		panel.add(searchButton);
-
+		setLocationRelativeTo(null);
 		add(panel);
 	}
 
@@ -151,15 +152,18 @@ public class HadoopCarAnalysisApp extends JFrame {
 	            fs.delete(output, true);
 	        }
 	        JobClient.runJob(job);
+	        JOptionPane.showMessageDialog(null, "Hadoop job executed successfully.", "Job Status", JOptionPane.INFORMATION_MESSAGE);
 	        System.out.println("Hadoop job executed successfully.");
 	    } catch (IOException ex) {
 	        ex.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Hadoop job execution failed: " + ex.getMessage(), "Job Status", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
 
 	public static void main(String[] args) {
 		HadoopCarAnalysisApp app = new HadoopCarAnalysisApp();
 		app.init();
+
 		app.setVisible(true);
 	}
 }
