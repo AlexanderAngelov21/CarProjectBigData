@@ -36,19 +36,27 @@ public class CarListMapper extends MapReduceBase implements Mapper<LongWritable,
 			}
 			String resultType = this.configuration.get("option", "Car List");
 			String brandFilter = this.configuration.get("brand", "");
+			String[] brands = brandFilter.replaceAll("\\s+", " ").trim().split(" ");
 			double minHorsepower = Double.parseDouble(this.configuration.get("minHp", "-1000"));
 			double maxHorsepower = Double.parseDouble(this.configuration.get("maxHp", "999999"));
 			double minMpg = Double.parseDouble(this.configuration.get("minMpg", "-1000"));
 			if (resultType.equals("Car List")) {
-			if ((brandFilter.isEmpty() || make.toLowerCase().contains(brandFilter.toLowerCase()))
+				 boolean brandMatch = false;
+		            for (String brand : brands) {
+		                if (make.toLowerCase().contains(brand.toLowerCase())) {
+		                    brandMatch = true;
+		                    break;
+		                }
+		            }
+			if ((brandMatch ||(brandFilter.isEmpty() || make.toLowerCase().contains(brandFilter.toLowerCase())))
 					&& (horsepower >= minHorsepower && horsepower <= maxHorsepower) && (mpg > minMpg)) {
                 String printMPG=String.valueOf(mpg);
                 String printHP=String.valueOf(horsepower);
                 if(horsepower<=0) {
-                	printHP="Invalid data - [Value less than or equal to 0]";
+                	printHP="Invalid horsepower - [Horsepower is less than or equal to 0]";
                 }
                 if(mpg<=0) {
-                	printMPG="Invalid data - [Value less than or equal to 0]";
+                	printMPG="Invalid MPG - [MPG is less than or equal to 0]";
                 }
 				Text outputKey = new Text(make);
 				Text outputValue = new Text(printHP + " " + printMPG);
