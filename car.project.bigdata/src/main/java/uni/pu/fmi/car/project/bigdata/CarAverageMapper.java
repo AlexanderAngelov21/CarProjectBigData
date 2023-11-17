@@ -1,6 +1,8 @@
 package uni.pu.fmi.car.project.bigdata;
 
 import java.io.IOException;
+import java.util.HashMap;
+
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -12,7 +14,7 @@ import org.apache.hadoop.mapred.Reporter;
 public class CarAverageMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
 	private org.apache.hadoop.mapred.JobConf configuration;
 	private int lineCounter = 0;
-
+	private int count2=0;
 	@Override
 	public void configure(org.apache.hadoop.mapred.JobConf job) {
 		super.configure(job);
@@ -29,6 +31,7 @@ public class CarAverageMapper extends MapReduceBase implements Mapper<LongWritab
 		String line = value.toString();
 		String[] columns = line.split(";");
 		String make = columns[0];
+		
 		double mpg = 0;
 		try {
 			mpg = Double.parseDouble(columns[2]);
@@ -47,7 +50,7 @@ public class CarAverageMapper extends MapReduceBase implements Mapper<LongWritab
                 }
             }
             if (brandMatch || (brandFilter.isEmpty() || make.toLowerCase().contains(brandFilter.toLowerCase()))) {
-                output.collect(new Text(make), new DoubleWritable(mpg));
+            	output.collect(new Text(make) , new DoubleWritable(mpg));
             }
         }
     }

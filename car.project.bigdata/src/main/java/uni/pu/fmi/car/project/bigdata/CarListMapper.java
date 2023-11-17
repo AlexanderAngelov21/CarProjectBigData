@@ -65,6 +65,5 @@ public class CarListMapper extends MapReduceBase implements Mapper<LongWritable,
 				output.collect(outputKey, outputValue);
 			}
 		}
-
 	}
 }

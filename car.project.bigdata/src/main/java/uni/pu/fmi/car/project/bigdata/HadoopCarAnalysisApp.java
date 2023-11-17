@@ -89,6 +89,9 @@ public class HadoopCarAnalysisApp extends JFrame {
 	}
 
 	public void init() {
+		minHorsepowerField.setEnabled(false);
+	    maxHorsepowerField.setEnabled(false);
+	    minMpgField.setEnabled(false);
 		optiontDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selectedResult = (String) optiontDropdown.getSelectedItem();
@@ -96,11 +99,12 @@ public class HadoopCarAnalysisApp extends JFrame {
 					minHorsepowerField.setEnabled(false);
 					maxHorsepowerField.setEnabled(false);
 					minMpgField.setEnabled(false);
-				} else {
+				} else  {
 					minHorsepowerField.setEnabled(true);
 					maxHorsepowerField.setEnabled(true);
 					minMpgField.setEnabled(true);
 				}
+				
 			}
 		});
 

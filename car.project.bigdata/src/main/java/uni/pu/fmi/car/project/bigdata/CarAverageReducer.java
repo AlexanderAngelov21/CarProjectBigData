@@ -12,7 +12,6 @@ import org.apache.hadoop.mapred.JobConf;
 
 public class CarAverageReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, Text> {
 	private JobConf conf;
-
 	@Override
 	public void configure(JobConf job) {
 		super.configure(job);
@@ -24,14 +23,17 @@ public class CarAverageReducer extends MapReduceBase implements Reducer<Text, Do
 			throws IOException {
 		double totalMpg = 0;
 		int count = 0;
+		int count2=0;
 		while (values.hasNext()) {
 			double mpg = Double.parseDouble(values.next().toString());
 			totalMpg += mpg;
 			count++;
+			count2++;
 		}
 		if (count > 0) {
 			double averageMpg = totalMpg / count;
-			output.collect(key, new Text(String.valueOf(averageMpg)));
+			output.collect(key, new Text(String.valueOf(averageMpg +" " +count2)));
+			
 		}
 	}
 }
